@@ -1,0 +1,68 @@
+1. 从hcgit03下载最新的utopia code, 将utopia code更新， 然后打tag，推tag上去。
+repo init -u ssh://hcgit03:29418/manifest/utopia -b c_cn_maserati_letv_dtmb_an-cus && repo sync -j16
+
+打tag:
+repo forall -c "git tag -a REL_938_LETV_TVOS-04.15.010.04.02.a6_2017XXX -m 'tag信息'"
+
+推 tag:
+repo forall -c "git push origin REL_938_LETV_TVOS-04.15.010.04.02.a6_2017XXX"
+
+2. 编译
+根据交接文档里编译即可。
+
+3. 准备编译出来的库、头文件的上code 环境
+没有工程的需要先下好, 有的先更新到最新，然后切到要上code的branch：
+SN 库相关的project:
+git clone ssh://wilf.wu@szgit01:26918/mstar/supernova/projects/board/maserati -b c_cn_938_letv_dvb_an_final-cus
+
+AN库相关的project:
+git clone ssh://wilf.wu@szgit01:26918/device/mstar/mangosteen -b c_cn_938_letv_dvb_an_final-cus
+
+mboot:
+git clone ssh://wilf.wu@szgit01:26918/platform/vendor/mstar/mboot -b c_cn_938_letv_dvb_an_final-cus
+
+4. 编译出来的lib及头文件所放的位置
+AN: 放在mangosteen\libraries\utopia\include lib lib64
+SN: 
+头文件：maserati\libraries\utopia\sn\include
+库:maserati\libraries\utopia\sn\arm-gnueabi-4.7.2\libs
+
+tee:
+maserati\libraries\utopia\tee\include
+maserati\libraries\utopia\tee\libs
+
+mboot:
+mboot\MstarCore\bsp\maserati\include
+mboot\MstarCore\bsp\maserati\lib
+
+5. 第3步里提到的SN，AN，mboot几个project更新完utopia的库、头文件后上code。
+写好commit信息，commit信息包含这次release到上次release之间的commit信息。
+
+repo forall –c “git log TAG1..TAG2” > xxx.txt 查看两个tag的差异
+
+6. 邮件告知客户。
+邮件可参考我之前发的。
+
+Dear 宝平，
+ 
+       请sync一下REL_938_LETV_TVOS-04.15.010.04.02.a6_20170224
+       Final line:
+       /vendor/mstar/mboot
+      997d141fa4e6af68876bec0e1ae1e280dd83b368
+ 
+       /vendor/mstar/supernova/projects/board/Maserati
+      ff79e1e112affcc9a19d26ab63cc33d778d77f0d
+ 
+       device/mstar/mangosteen
+      c9ae66e7c20bca453caf79dd6735feeb5873ae69
+解决问题：
+1. optimize PCMR, disable mch speaker output && fixed MS12LC dap hash key issue, mantis_1286631
+2. sync from http://hcgit03:8080/#/c/194429/ to Fix UpdateRegionOnce can not work when multithread, mantis_1287754
+3. sync http://hcgit03:8080/#/c/112509/ [UFSC PQDS] UFSC PQDS to handle MM UFSC always 4kto4k(1/3), mantis_1177326
+4. [EVD][HEVC] move HW buffer to main Frame Buffer, HLD_000354
+5. [VDEC][TEE] Implement Dual Secure for R2 tee, mantis_1197392
+6. [VDEC] Sync Allocator Code, mantis_1299948
+7. [UFSC PQDS] UFSC PQDS to handle MM UFSC always 4kto4k(2/3), mantis_1177326
+8. [VDEC][Header][TEE] Add dual secure header, mantis_1197392
+9. Merge for trunk, update utopia of gop, mantis_1136578
+谢谢！
